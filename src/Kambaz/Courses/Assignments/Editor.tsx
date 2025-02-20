@@ -1,15 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useParams, Link } from "react-router-dom";
 import { Form, Button, Card } from "react-bootstrap";
+import * as db from "../../Database";
+
 export default function AssignmentEditor() {
+  // Retrieve the course and assignment IDs from the URL
+  const { cid, aid } = useParams();
+
+  const assignment = db.assignments.find(
+    (a: any) => a._id === aid && a.course === cid
+  ) as any;
+
   return (
     <div id="wd-assignments-editor" className="p-3">
       <Form>
-
         <Form.Group className="mb-3" controlId="wd-name">
           <Form.Label>Assignment Name</Form.Label>
           <Form.Control
-            defaultValue="A1 - ENV + HTML"
             type="text"
             placeholder="e.g. A1 - ENV + HTML"
+            defaultValue={assignment.title}
           />
         </Form.Group>
 
@@ -18,14 +28,18 @@ export default function AssignmentEditor() {
           <Form.Control
             as="textarea"
             rows={5}
-            defaultValue="The assignment is available online. Submit a link to the landing page..."
+            defaultValue={
+              assignment.description ?? "The assignment is available online. Submit a link to the landing page..."
+            }
           />
         </Form.Group>
 
-
         <Form.Group className="mb-3" controlId="wd-points">
           <Form.Label>Points</Form.Label>
-          <Form.Control type="number" defaultValue={100} />
+          <Form.Control
+            type="number"
+            defaultValue={assignment.points ?? 100}
+          />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="wd-assignment-group">
@@ -37,7 +51,6 @@ export default function AssignmentEditor() {
           </Form.Select>
         </Form.Group>
 
-
         <Form.Group className="mb-3" controlId="wd-display-grade">
           <Form.Label>Display Grade as</Form.Label>
           <Form.Select defaultValue="Percentage">
@@ -45,7 +58,6 @@ export default function AssignmentEditor() {
             <option>Complete/Incomplete</option>
           </Form.Select>
         </Form.Group>
-
 
         <Form.Group className="mb-3" controlId="wd-submission-type">
           <Form.Label>Submission Type</Form.Label>
@@ -63,7 +75,6 @@ export default function AssignmentEditor() {
           </div>
         </Form.Group>
 
-        
         <Card className="p-3 mb-3">
           <Card.Title>Assign</Card.Title>
           <Form.Group className="mb-3" controlId="wd-assign-to">
@@ -72,31 +83,43 @@ export default function AssignmentEditor() {
           </Form.Group>
 
           <div className="d-flex gap-4">
-
             <Form.Group className="mb-3" controlId="wd-due-date">
               <Form.Label>Due</Form.Label>
-              <Form.Control type="datetime-local" defaultValue="2024-05-13T23:59" />
+              <Form.Control
+                type="datetime-local"
+                defaultValue={assignment.dueDate ?? "2024-05-13T23:59"}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-available-from">
               <Form.Label>Available from</Form.Label>
-              <Form.Control type="datetime-local" defaultValue="2024-05-06T00:00" />
+              <Form.Control
+                type="datetime-local"
+                defaultValue={assignment.availableFrom ?? "2024-05-06T00:00"}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="wd-available-until">
               <Form.Label>Until</Form.Label>
-              <Form.Control type="datetime-local" defaultValue="2024-05-20T23:59" />
+              <Form.Control
+                type="datetime-local"
+                defaultValue={assignment.availableUntil ?? "2024-05-20T23:59"}
+              />
             </Form.Group>
           </div>
         </Card>
 
         <div className="d-flex justify-content-end gap-3">
-          <Button variant="secondary" id="wd-cancel">
-            Cancel
-          </Button>
-          <Button variant="danger" id="wd-save">
-            Save
-          </Button>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="secondary" id="wd-cancel">
+              Cancel
+            </Button>
+          </Link>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="danger" id="wd-save">
+              Save
+            </Button>
+          </Link>
         </div>
       </Form>
     </div>

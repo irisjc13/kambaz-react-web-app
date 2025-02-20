@@ -16,7 +16,7 @@ export default function Kambaz() {
           <td valign="top"> */}
        <div className="wd-main-content-offset p-3">
         <Routes>
-        <Route path="/" element={<Navigate to="Dashboard" />} />
+        <Route path="/" element={<Navigate to="Account" />} />
         <Route path="/Account/*" element={<Account />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Courses/:cid/*" element={<Courses />} />
