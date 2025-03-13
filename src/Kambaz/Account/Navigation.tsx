@@ -1,52 +1,34 @@
-import { Link } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 export default function AccountNavigation() {
-  return (
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+  const { pathname } = useLocation();
+
+return (
     <div id="wd-account-navigation" style={{ paddingLeft: "0.5rem" }}>
+      {links.map((link) => {
+        const isActive = pathname.includes(link);
 
-      <Link
-        to="/Kambaz/Account/Signin"
-        style={{
-          display: "block",
-          marginBottom: "0.5rem",
-          fontSize: "1.25rem",
-          textDecoration: "none",
-          borderLeft: "3px solid black",
-          color: "black",
-          paddingLeft: "0.5rem",
-        }}
-      >
-        Signin
-      </Link>
-
-
-      <Link
-        to="/Kambaz/Account/Signup"
-        style={{
-          display: "block",
-          marginBottom: "0.5rem",
-          fontSize: "1.25rem",
-          textDecoration: "none",
-          color: "red",
-          paddingLeft: "0.5rem",
-        }}
-      >
-        Signup
-      </Link>
-
- 
-      <Link
-        to="/Kambaz/Account/Profile"
-        style={{
-          display: "block",
-          marginBottom: "0.5rem",
-          fontSize: "1.25rem",
-          textDecoration: "none",
-          color: "red",
-          paddingLeft: "0.5rem",
-        }}
-      >
-        Profile
-      </Link>
+        return (
+          <Link
+            key={link}
+            to={`/Kambaz/Account/${link}`}
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontSize: "1.25rem",
+              textDecoration: "none",
+              color: isActive ? "blue" : link === "Profile" ? "red" : "black", 
+              borderLeft: isActive ? "3px solid blue" : "none", 
+              paddingLeft: "0.5rem",
+            }}
+          >
+            {link}
+          </Link>
+        );
+      })}
     </div>
   );
 }
