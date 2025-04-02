@@ -19,6 +19,11 @@ const enrollmentsSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
+
+    setEnrollments: (state, action) => {
+      state.enrollments = action.payload;
+    },
+
     enroll: (state, { payload }: { payload: Enrollment }) => {
       state.enrollments.push(payload);
       localStorage.setItem("enrollments", JSON.stringify(state.enrollments));
@@ -32,5 +37,5 @@ const enrollmentsSlice = createSlice({
   },
 });
 
-export const { enroll, unenroll } = enrollmentsSlice.actions;
+export const { setEnrollments, enroll, unenroll } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;

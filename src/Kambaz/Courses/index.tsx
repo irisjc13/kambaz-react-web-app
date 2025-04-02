@@ -1,31 +1,43 @@
-import { Routes, Route, Navigate } from "react-router";
-import Account from "../Account";
-import Dashboard from "../Dashboard";
-import KambazNavigation from "./Navigation";
-import Courses from "../Courses";
-import ProtectedRoute from "../Account/ProtectedRoute";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import CourseNavigation from "./Navigation";
+import Modules from "./Modules";
+import Home from "./Home";
+import Assignments from "./Assignments";
+import AssignmentEditor from "./Assignments/Editor";
+import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
+import { FaAlignJustify } from "react-icons/fa";
 
-export default function Kambaz() {
+interface CoursesProps {
+  courses: any[];
+}
+
+export default function Courses({ courses }: CoursesProps) {
+  const { cid } = useParams();
+  const course = courses.find((course) => course._id === cid);
+  const { pathname } = useLocation();
+
   return (
-    <div id="wd-kambaz">
-      <KambazNavigation />
-      <div className="wd-main-content-offset p-3">
-        <Routes>
-          <Route path="/" element={<Navigate to="Account" />} />
-          <Route path="/Account/*" element={<Account />} />
-          <Route
-            path="/Dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
-          <Route path="/Calendar" element={<h1>Calendar</h1>} />
-          <Route path="/Inbox" element={<h1>Inbox</h1>} />
-        </Routes>
+    <div id="wd-courses">
+      <h2 className="text-danger">
+        <FaAlignJustify className="me-4 fs-4 mb-1" />
+        {course && course.name} &gt; {pathname.split("/")[4]}
+      </h2>
+      <hr />
+      <div className="d-flex">
+        <div className="d-none d-md-block">
+          <CourseNavigation />
+        </div>
+        <div className="flex-fill">
+          <Routes>
+            <Route path="/" element={<Navigate to="Home" />} />
+            <Route path="Home" element={<Home />} />
+            <Route path="Modules" element={<Modules />} />
+            <Route path="Assignments" element={<Assignments />} />
+            <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );
 }
+  
