@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
 import { v4 as uuidv4 } from "uuid";
 // Import the client functions for assignments
-import { createAssignmentForCourse, updateAssignment as clientUpdateAssignment } from "./client";
+import {createAssignment, updateAssignment as clientUpdateAssignment } from "./client";
+// import { createAssignmentForCourse, updateAssignment as clientUpdateAssignment } from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
@@ -48,16 +49,14 @@ export default function AssignmentEditor() {
 
   const handleSave = async () => {
     if (aid === "new") {
-      // Create new assignment on the server
-      const newAssignment = await createAssignmentForCourse(cid as string, assignment);
+      const newAssignment = await createAssignment(cid as string, assignment);
       dispatch(addAssignment(newAssignment));
     } else {
-      // Update existing assignment on the server
       const updatedAssignment = await clientUpdateAssignment({ ...assignment, course: cid });
       dispatch(updateAssignment(updatedAssignment));
     }
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
-  };
+  };  
 
   if (!assignment) {
     return <div>Assignment not found</div>;

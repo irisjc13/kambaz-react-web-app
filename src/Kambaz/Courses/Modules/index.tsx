@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ModulesControls from "./ModulesControls";
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "./LessonControlButtons";
 import ModulesControlsButtons from "./ModuleControlButtons";
 import { useState, useEffect } from "react";
-import * as coursesClient from "../client";
+import * as courseClient from "../client";
 import * as modulesClient from "./client";
 import { useParams } from "react-router";
 import { FormControl } from "react-bootstrap";
@@ -19,27 +20,56 @@ export default function Modules() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
-  const saveModule = async (module: any) => {
+  const fetchModulesForCourse = async () => {
+    const modules = await courseClient.findModulesForCourse(cid!);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModulesForCourse();
+  }, [cid]);
+
+
+  const updateModuleHandler = async (module: any) => {
     await modulesClient.updateModule(module);
     dispatch(updateModule(module));
   };
-  
-  const removeModule = async (moduleId: string) => {
+ 
+
+  const deleteModuleHandler = async (moduleId: string) => {
     await modulesClient.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
+  }; 
+
+  const addModuleHandler = async () => {
+    const newModule = await courseClient.createModuleForCourse(cid!, {
+      name: moduleName,
+      course: cid,
+    });
+    dispatch(addModule(newModule));
+    setModuleName("");
   };
+ 
+  // const saveModule = async (module: any) => {
+  //   await modulesClient.updateModule(module);
+  //   dispatch(updateModule(module));
+  // };
+  
+  // const removeModule = async (moduleId: string) => {
+  //   await modulesClient.deleteModule(moduleId);
+  //   dispatch(deleteModule(moduleId));
+  // };
 
 
-  const createModuleForCourse = async () => {
-    if (!cid) return;
-    const newModule = { name: moduleName, course: cid };
-    const module = await coursesClient.createModuleForCourse(cid, newModule);
-    dispatch(addModule(module));
-  };
+  // const createModuleForCourse = async () => {
+  //   if (!cid) return;
+  //   const newModule = { name: moduleName, course: cid };
+  //   const module = await courseClient.createModuleForCourse(cid, newModule);
+  //   dispatch(addModule(module));
+  // };
 
 
   const fetchModules = async () => {
-    const modules = await coursesClient.findModulesForCourse(cid as string);
+    const modules = await courseClient.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
   };
   useEffect(() => {
@@ -50,9 +80,10 @@ export default function Modules() {
     <div>
       {currentUser?.role === "FACULTY" && (
         <ModulesControls
+          addModule={addModuleHandler}
           moduleName={moduleName}
           setModuleName={setModuleName}
-          addModule={createModuleForCourse}
+          // addModule={createModuleForCourse}
         />
       )}
       <br /><br /><br /><br />
@@ -67,10 +98,10 @@ export default function Modules() {
                 {module.editing && (
                   <FormControl
                     className="w-50 d-inline-block"
-                    onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
+                    onChange={(e) => updateModuleHandler({ ...module, name: e.target.value })}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        saveModule({ ...module, editing: false });
+                        updateModuleHandler({ ...module, editing: false });
                       }
                     }}
                     defaultValue={module.name}
@@ -79,7 +110,8 @@ export default function Modules() {
                 {currentUser?.role === "FACULTY" && (
                   <ModulesControlsButtons
                     moduleId={module._id}
-                    deleteModule={(moduleId) => removeModule(moduleId)}
+                    deleteModule={(moduleId) => deleteModuleHandler(moduleId)}
+                    // deleteModule={(moduleId) => removeModule(moduleId)}
                     editModule={(moduleId) => dispatch(editModule(moduleId))}
                   />
                 )}

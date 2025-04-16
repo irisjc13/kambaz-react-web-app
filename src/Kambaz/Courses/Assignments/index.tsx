@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { findAssignmentsForCourse} from "./client";
 import { setAssignments, deleteAssignment } from "./reducer";
+import { deleteAssignment as deleteAssignmentFromServer } from "./client";
 import AssignmentControls from "./AssignmentsControls";
 import AssignmentsBannerButtons from "./AssignmentsBannerButtons";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
@@ -37,12 +38,14 @@ export default function Assignments() {
     setShowModal(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedAssignment) {
-      dispatch(deleteAssignment(selectedAssignment));
+      await deleteAssignmentFromServer(selectedAssignment);  // deletes from Mongo
+      dispatch(deleteAssignment(selectedAssignment));         // cleans up Redux state
     }
     setShowModal(false);
   };
+  
 
   return (
     <div id="wd-assignments" className="p-3">

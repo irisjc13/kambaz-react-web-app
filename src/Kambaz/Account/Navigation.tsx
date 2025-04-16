@@ -6,6 +6,10 @@ export default function AccountNavigation() {
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
   const { pathname } = useLocation();
 
+  function active(path: string) {
+    return pathname.includes(path) ? "active" : "";
+  }
+
 return (
     <div id="wd-account-navigation" style={{ paddingLeft: "0.5rem" }}>
       {links.map((link) => {
@@ -27,8 +31,11 @@ return (
           >
             {link}
           </Link>
+          
         );
       })}
+
+      {currentUser && currentUser.role === "ADMIN" && (
+       <Link to={`/Kambaz/Account/Users`} className={`list-group-item ${active("Users")}`}> Users </Link> )}
     </div>
-  );
-}
+  );}
