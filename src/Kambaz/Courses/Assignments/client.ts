@@ -12,7 +12,10 @@ export const findAssignmentsForCourse = async (courseId: string) => {
 };
 
 export const createAssignment = async (courseId: string, assignment: any) => {
-  const response = await axiosWithCredentials.post(`${ASSIGNMENTS_API}/courses/${courseId}/assignments`, assignment);
+  const response = await axiosWithCredentials.post(
+    `${ASSIGNMENTS_API}/courses/${courseId}/assignments`,
+    assignment
+  );
   return response.data;
 };
 
