@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { findAssignmentsForCourse} from "./client";
 import { setAssignments, deleteAssignment } from "./reducer";
+
 import AssignmentControls from "./AssignmentsControls";
 import AssignmentsBannerButtons from "./AssignmentsBannerButtons";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
@@ -43,6 +44,7 @@ export default function Assignments() {
     }
     setShowModal(false);
   };
+  
 
   return (
     <div id="wd-assignments" className="p-3">

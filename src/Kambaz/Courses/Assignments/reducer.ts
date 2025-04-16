@@ -22,8 +22,10 @@ const assignmentsSlice = createSlice({
         description: assignment.description ?? "",
         points: assignment.points ?? 100,
         dueDate: assignment.dueDate ?? "",
-        availableFrom: assignment.availableFrom ?? "",
-        availableUntil: assignment.availableUntil ?? "",
+        availableDate: assignment.availableDate ?? "",
+        group: assignment.group ?? "Assignments",
+        displayGrade: assignment.displayGrade ?? "points",
+        submissionType: assignment.submissionType ?? "online",
       };
       state.assignments.push(newAssignment);
     },
